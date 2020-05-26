@@ -60,19 +60,13 @@ getShowsData('./data/tv-shows.json')
 });
 
 // Toggel poster images at TV show card under mouse pointer
-tvShowsList.addEventListener('mouseover', (event) => {
+const toggleImg = event => {
     const target = event.target;
     const img = target.closest('.tv-card__img');
     if (img != null) {
-        localStorage.setItem('image', img['src']);
-        img['src'] = img['dataset']['backdrop'];
+        [img.src, img.dataset.backdrop] = [img.dataset.backdrop, img.src];
     }
-});
+};
 
-tvShowsList.addEventListener('mouseout', (event) => {
-    const target = event.target;
-    const img = target.closest('.tv-card__img');
-    if (img != null) {
-        img['src'] = localStorage.getItem('image');
-    }
-});
+tvShowsList.addEventListener('mouseover', toggleImg);
+tvShowsList.addEventListener('mouseout', toggleImg);

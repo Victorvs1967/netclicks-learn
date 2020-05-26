@@ -1,0 +1,142 @@
+[
+    {
+        "id": "01",
+        "head": "Звёздные войны: Повстанцы",
+        "vote": "7.4",
+        "face": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/fhV9ckyBko1ZejEEmwdiXG8YMy5.jpg",
+        "backdrop": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/AdJgkXb8oLI8e4rsk8XzkvABIuw.jpg"
+    },
+    {
+        "id": "02",
+        "head": "Звёздные войны: Войны клонов",
+        "vote": "8.1",
+        "face": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/o9XEd15zRzef9SlOuJYPdS5HCdK.jpg",
+        "backdrop": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/lXWgVQ1whAEMz4Ju88UyPoveIKD.jpg"
+    },
+    {
+        "id": "03",
+        "head": "Звёздные войны: Войны клонов",
+        "vote": "7.1",
+        "face": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/2lsuke69bRdyB1sxtKmavtwkc35.jpg",
+        "backdrop": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/pxkeqSHfTkefKz0y5naAX1u9cDw.jpg"
+    },
+    {
+        "id": "04",
+        "head": "Звёздные войны: Сопротивление",
+        "vote": "6.4",
+        "face": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/xul6SG8rar3wkHPY8YusUtxcdlZ.jpg",
+        "backdrop": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/9eXNA3K010TlkUTLSzQ07cP6uPF.jpg"
+    },
+    {
+        "id": "05",
+        "head": "Дроиды",
+        "vote": "4.2",
+        "face": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/z8l5c046nQ9KoHpKIrcTBw7P7dL.jpg",
+        "backdrop": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/z8l5c046nQ9KoHpKIrcTBw7P7dL.jpg" 
+    },
+    {
+        "id": "06",
+        "head": "Эвоки",
+        "vote": "6.6",
+        "face": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/uv7QkoePPK5PfpYVVim6JI8DEpO.jpg",
+        "backdrop": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/afHWBChQ16H1xutbtq2lrKFC4TF.jpg"
+    },
+    {
+        "id": "07",
+        "head": "Disney Gallery / Star Wars: The Mandalorian",
+        "vote": "6.3",
+        "face": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/f2tf2EuXM6hP2OkRWWmIB0uj6HV.jpg",
+        "backdrop": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/a68xDZ48UnzN5KpTwp0UQLyYSYn.jpg"
+    },
+    {
+        "id": "08",
+        "head": "Звёздные войны: Силы судьбы",
+        "vote": "4.6",
+        "face": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/a5d2y264VgYUvpKUNNT6EbL1Cwb.jpg",
+        "backdrop": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/rfxCWSwzkeeQne9Mb8kNPDqZYBC.jpg"
+    },
+    {
+        "id": "09",
+        "head": "Lego Звездные войны: Байки дроидов",
+        "vote": "6.1",
+        "face": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/latxtxQYgODFBwh3dO2TGT3Ooat.jpg",
+        "backdrop": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/hytEUV61X3Tp2EOaUZkayH98xVy.jpg"
+    },
+    {
+        "id": "10",
+        "head": "ЛЕГО. Звездные войны. Приключения изобретателей",
+        "vote": "7.3",
+        "face": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/1uI5ZG2eGEV25n3klN4M1SrJCl0.jpg",
+        "backdrop": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/4sHLM2pdGuKFaPxNsaXNR2mf108.jpg"
+    },
+    {
+        "id": "11",
+        "head": "Lego Звездные войны: Хроники Йоды",
+        "vote": "6.8",
+        "face": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/1S1j1QxwLNPNiUrq8GSg05KkAmY.jpg",
+        "backdrop": "./img/no-poster.jpg" 
+    },
+    {
+        "id": "12",
+        "head":"LEGO Star Wars: All-Stars" ,
+        "vote": "8",
+        "face": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/97dmYYI7TACdGvXWQd2sIyMq16n.jpg",
+        "backdrop": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/v5R177GUoZXooZgyLGPntHgb9OC.jpg"
+    },
+    {
+        "id": "13",
+        "head": "Star Wars Rebels Recon",
+        "vote": "7.5",
+        "face": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/rwYL1fGB004owaTmprYmx8STKqq.jpg",
+        "backdrop": "./img/no-poster.jpg"
+    },
+    {
+        "id": "14",
+        "head": "Star Wars Galaxy of Adventures",
+        "vote": "5.8",
+        "face": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/z2q1RjIX1S2GDc75f4ohT3GQBoK.jpg",
+        "backdrop": "./img/no-poster.jpg"
+    },
+    {
+        "id": "15",
+        "head": "Science of Star Wars",
+        "vote": "",
+        "face": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/bTaX5IDnbueFD0eHeUJVwUpyjcT.jpg",
+        "backdrop": "./img/no-poster.jpg"
+    },
+    {
+        "id": "16",
+        "head": "I've Never Seen Star Wars",
+        "vote": "",
+        "face": "./img/no-poster.jpg",
+        "backdrop": "./img/no-poster.jpg"
+    },
+    {
+        "id": "17",
+        "head": "LEGO Star Wars: The Resistance Rises",
+        "vote": "6.2",
+        "face": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/iWTvTLpA83iNj2fG9TxomEo7b5M.jpg",
+        "backdrop": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/op6aQ6p9QGmFUxErOGSVHzyUC2R.jpg"
+    },
+    {
+        "id": "18",
+        "head": "Star Wars live-action TV series",
+        "vote": "",
+        "face": "./img/no-poster.jpg",
+        "backdrop": "./img/no-poster.jpg"
+    },
+    {
+        "id": "19",
+        "head": "Star Wars: Jedi Temple Challenge",
+        "vote": "",
+        "face": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/cPWxWAlsJw1QVNNuufPzZzebVtY.jpg",
+        "backdrop": "https://image.tmdb.org/t/p/w185_and_h278_bestv2/3bBC4u27W4TfOkCVKds7nofJCfe.jpg"
+    },
+    {
+        "id": "20",
+        "head": "Untitled Star Wars: Rogue One Prequel Series",
+        "vote": "",
+        "face": "./img/no-poster.jpg",
+        "backdrop": "./img/no-poster.jpg"
+    }
+]

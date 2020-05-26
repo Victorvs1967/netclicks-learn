@@ -36,6 +36,12 @@ const renderTvShowCard = ({id, head, vote, face, backdrop}) => {
     tvShowsList.append(card);
 };
 
+// Place TV show cards to main page
+new DBService().getData('./data/tv-shows.json')
+ .then((data) => {
+    data.forEach(renderTvShowCard);
+});
+
 // open/close menu
 humburger.addEventListener('click', () => {
     leftMenu.classList.toggle('openMenu');
@@ -59,12 +65,6 @@ leftMenu.addEventListener('click', event => {
     }
 });
 
-// Place TV show cards to main page
-new DBService().getData('./data/tv-shows.json')
- .then((data) => {
-    data.forEach(renderTvShowCard);
-});
-
 // Toggel poster images at TV show card under mouse pointer
 const toggleImg = event => {
     const target = event.target;
@@ -77,14 +77,10 @@ const toggleImg = event => {
 tvShowsList.addEventListener('mouseover', toggleImg);
 tvShowsList.addEventListener('mouseout', toggleImg);
 
-
 tvShowsList.addEventListener('click', event => {
     
-    // modal.preventDefault();
-
     const target = event.target;
     const card = target.closest('.tv-card');
-
     if (card) {
         document.body.style.overflow = 'hidden';
         modal.classList.remove('hide');
@@ -93,8 +89,9 @@ tvShowsList.addEventListener('click', event => {
 });
 
 modal.addEventListener('click', event => {
+    const target = event.target;
 
-    if (event.target.closest('.cross') || event.target.classList.contains('modal')) {
+    if (target.closest('.cross') || target.classList.contains('modal')) {
         document.body.style.overflow = '';
         modal.classList.add('hide');
     }

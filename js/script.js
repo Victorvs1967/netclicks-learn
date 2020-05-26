@@ -35,6 +35,7 @@ const getShowsData = async (url) => {
     }
     return response.json();
 };
+
 // Insert TV show card data to HTML block
 const tvShowCardCreate = ({id, head, vote, face, backdrop}) => {
     const card = `
@@ -67,6 +68,7 @@ tvShowsList.addEventListener('mouseover', (event) => {
         img['src'] = img['dataset']['backdrop'];
     }
 });
+
 tvShowsList.addEventListener('mouseout', (event) => {
     const target = event.target;
     const img = target.closest('.tv-card__img');

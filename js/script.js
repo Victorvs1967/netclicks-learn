@@ -24,16 +24,8 @@ class DBService {
 // Insert TV show card data to HTML block
 const renderTvShowCard = ({id, original_name:title, vote_average:vote, poster_path:poster, backdrop_path:backdrop}) => {
 
-    if (backdrop) {
-        backdrop = BASE_URL + backdrop;
-    } else {
-        backdrop = './img/no-poster.jpg';
-    }
-    if (poster) {
-        poster = BASE_URL + poster;
-    } else {
-        poster = './img/no-poster.jpg';
-    }
+    backdrop = (backdrop) ? BASE_URL + backdrop : './img/no-poster.jpg';
+    poster = (poster) ? BASE_URL + poster : './img/no-poster.jpg';
     const span = (vote === 0) ? '' : `<span class="tv-card__vote">${vote}</span>`;
 
     const card = document.createElement('li');
@@ -98,7 +90,6 @@ tvShowsList.addEventListener('click', event => {
     if (card) {
         document.body.style.overflow = 'hidden';
         modal.classList.remove('hide');
-        console.log(card.dataset.id);
     }
 });
 

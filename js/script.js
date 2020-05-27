@@ -5,6 +5,7 @@ const leftMenu = document.querySelector('.left-menu'),
     modal = document.querySelector('.modal');
 
 const BASE_URL = 'https://image.tmdb.org/t/p/w185_and_h278_bestv2';
+const API_KEY = '';
 class DBService {
 
     async getData(url) {
@@ -21,30 +22,29 @@ class DBService {
 }
 
 // Insert TV show card data to HTML block
-const renderTvShowCard = ({id, original_name, vote_average, poster_path, backdrop_path}) => {
+const renderTvShowCard = ({id, original_name:title, vote_average:vote, poster_path:poster, backdrop_path:backdrop}) => {
 
-    if (backdrop_path) {
-        backdrop_path = BASE_URL + backdrop_path;
+    if (backdrop) {
+        backdrop = BASE_URL + backdrop;
     } else {
-        backdrop_path = './img/no-poster.jpg';
+        backdrop = './img/no-poster.jpg';
     }
-    if (poster_path) {
-        poster_path = BASE_URL + poster_path;
+    if (poster) {
+        poster = BASE_URL + poster;
     } else {
-        poster_path = './img/no-poster.jpg';
+        poster = './img/no-poster.jpg';
     }
-
-
+    
     const card = document.createElement('li');
     card.className = 'tv-shows__item'
     card.innerHTML = `
-            <a href="#" class="tv-card">
-                <span class="tv-card__vote">${vote_average}</span>
+            <a href="#" class="tv-card" data-id="${id}">
+                <span class="tv-card__vote">${vote}</span>
                 <img class="tv-card__img"
-                    src="${poster_path}"
-                    data-backdrop="${backdrop_path}"
-                    alt="${original_name}">
-                <h4 class="tv-card__head">${original_name}</h4>
+                    src="${poster}"
+                    data-backdrop="${backdrop}"
+                    alt="${title}">
+                <h4 class="tv-card__head">${title}</h4>
             </a>
     `;
     tvShowsList.append(card);
@@ -97,6 +97,7 @@ tvShowsList.addEventListener('click', event => {
     if (card) {
         document.body.style.overflow = 'hidden';
         modal.classList.remove('hide');
+        console.log(card.dataset.id);
     }
 });
 

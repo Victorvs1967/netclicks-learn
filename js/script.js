@@ -5,7 +5,7 @@ const leftMenu = document.querySelector('.left-menu'),
     modal = document.querySelector('.modal');
 
 const BASE_URL = 'https://image.tmdb.org/t/p/w185_and_h278_bestv2';
-const API_KEY = '';
+const API_KEY = '565bffc33a642464d643ce0ca8704d54';
 class DBService {
 
     async getData(url) {
@@ -34,7 +34,7 @@ const renderTvShowCard = ({id, original_name:title, vote_average:vote, poster_pa
     } else {
         poster = './img/no-poster.jpg';
     }
-    
+
     const card = document.createElement('li');
     card.className = 'tv-shows__item'
     card.innerHTML = `

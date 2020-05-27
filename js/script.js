@@ -34,12 +34,13 @@ const renderTvShowCard = ({id, original_name:title, vote_average:vote, poster_pa
     } else {
         poster = './img/no-poster.jpg';
     }
+    const span = (vote === 0) ? '' : `<span class="tv-card__vote">${vote}</span>`;
 
     const card = document.createElement('li');
     card.className = 'tv-shows__item'
     card.innerHTML = `
             <a href="#" class="tv-card" data-id="${id}">
-                <span class="tv-card__vote">${vote}</span>
+                ${span}
                 <img class="tv-card__img"
                     src="${poster}"
                     data-backdrop="${backdrop}"

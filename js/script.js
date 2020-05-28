@@ -12,7 +12,8 @@ const leftMenu = document.querySelector('.left-menu'),
     rating = document.querySelector('.rating'),
     modalLink = document.querySelector('.modal__link'),
     searchForm = document.querySelector('.search__form'),
-    searchFormInput = document.querySelector('.search__form-input');
+    searchFormInput = document.querySelector('.search__form-input'),
+    tvShowsHead = document.querySelector('.tv-shows__head');
 
 const loading = document.createElement('div');
 loading.className = 'loading';
@@ -31,22 +32,27 @@ class DBService {
         return response.json();
     }
     async getSearchResult(query) {
+        tvShowsHead.textContent = 'Результат поиска'
         return await this.getData(`${this.SERVER}/search/tv?api_key=${this.API_KEY}&query=${query}&language=ru_RU`);
     }
-    async getTvShow(tvId) {
-        return await this.getData(`${this.SERVER}/tv/${tvId}?api_key=${this.API_KEY}&language=ru_RU`)
-    } 
     async getTopRatedTvShow() {
+        tvShowsHead.textContent = 'Топ сериалов'
         return await this.getData(`${this.SERVER}/tv/top_rated?api_key=${this.API_KEY}&language=ru_RU`)
     } 
     async getPopularTvShow() {
+        tvShowsHead.textContent = 'Популярные сериалы'
         return await this.getData(`${this.SERVER}/tv/popular?api_key=${this.API_KEY}&language=ru_RU`)
     } 
     async getWeekTvShow() {
+        tvShowsHead.textContent = 'Эпизоды на этой неделе'
         return await this.getData(`${this.SERVER}/tv/on_the_air?api_key=${this.API_KEY}&language=ru_RU`)
     } 
     async getTodayTvShow() {
+        tvShowsHead.textContent = 'Эпизоды сегодня'
         return await this.getData(`${this.SERVER}/tv/airing_today?api_key=${this.API_KEY}&language=ru_RU`)
+    } 
+    async getTvShow(tvId) {
+        return await this.getData(`${this.SERVER}/tv/${tvId}?api_key=${this.API_KEY}&language=ru_RU`)
     } 
     // testing
     async getTestData() {

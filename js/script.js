@@ -1,6 +1,4 @@
 const BASE_URL = 'https://image.tmdb.org/t/p/w185_and_h278_bestv2';
-const API_KEY = '565bffc33a642464d643ce0ca8704d54';
-const SERVER = `https://api.themoviedb.org/3/`;
 
 const leftMenu = document.querySelector('.left-menu'),
     humburger = document.querySelector('.humburger'),
@@ -20,6 +18,11 @@ const loading = document.createElement('div');
 loading.className = 'loading';
 class DBService {
 
+    constructor() {
+        this.API_KEY = '565bffc33a642464d643ce0ca8704d54';
+        this.SERVER = `https://api.themoviedb.org/3`;    
+    }
+    
     async getData(url) {
         const response =  await fetch(url);
         if (!response.ok) {
@@ -27,22 +30,19 @@ class DBService {
         }
         return response.json();
     }
-
+    async getSearchResult(query) {
+        return await this.getData(`${this.SERVER}/search/tv?api_key=${this.API_KEY}&query=${query}&language=ru_RU`);
+    }
+    async getTvShow(tvId) {
+        return await this.getData(`${this.SERVER}/tv/${tvId}?api_key=${this.API_KEY}&language=ru_RU`)
+    } 
+    // testing
     async getTestData() {
         return await this.getData('./data/test.json');
     } 
-    
     async getTestCard() {
         return await this.getData('./data/card.json');
     }
-
-    async getSearchResult(query) {
-        return await this.getData(`${SERVER}search/tv?api_key=${API_KEY}&query=${query}&page=1`);
-    }
-
-    async getTvShow(tvId) {
-        return await this.getData(`${SERVER}tv/${tvId}?api_key=${API_KEY}&language=ru_RU`)
-    } 
 
 }
 
@@ -127,14 +127,11 @@ tvShowsList.addEventListener('mouseover', toggleImg);
 tvShowsList.addEventListener('mouseout', toggleImg);
 
 tvShowsList.addEventListener('click', event => {
-
     event.preventDefault();
-
     const target = event.target;
     const card = target.closest('.tv-card');
 
     if (card) {
-
         new DBService().getTvShow(card.dataset.id)
         .then(data => {
             tvCardImg.src = data.poster_path ? BASE_URL + data.poster_path : './img/no-poster.jpg';
@@ -142,12 +139,17 @@ tvShowsList.addEventListener('click', event => {
             rating.textContent = data.vote_average;
             description.textContent = data.overview;
             modalLink.href = data.homepage;
+
+            genresList.textContent = '';
+
+            for (const item of data.genres) {
+                genresList.innerHTML += `<li>${item.name}</li>`;
+            }
         })
         .then(() => {
-
+            document.body.style.overflow = 'hidden';
+            modal.classList.remove('hide');    
         });
-        document.body.style.overflow = 'hidden';
-        modal.classList.remove('hide');
     }
 });
 
@@ -159,5 +161,3 @@ modal.addEventListener('click', event => {
         modal.classList.add('hide');
     }
 });
-
-

@@ -15,6 +15,7 @@ const leftMenu = document.querySelector('.left-menu'),
     searchFormInput = document.querySelector('.search__form-input'),
     tvShowsHead = document.querySelector('.tv-shows__head'),
     loader = document.querySelector('.loader'),
+    pagination = document.querySelector('.pagination'),
     dropdown = document.querySelectorAll('.dropdown');
 
 const loading = document.createElement('div');
@@ -35,7 +36,8 @@ class DBService {
     }
     async getSearchResult(query) {
         tvShowsHead.textContent = 'Результат поиска';
-        return await this.getData(`${this.SERVER}/search/tv?api_key=${this.API_KEY}&query=${query}&language=ru_RU`);
+        this.temp = `${this.SERVER}/search/tv?api_key=${this.API_KEY}&query=${query}&language=ru_RU`
+        return await this.getData(this.temp);
     }
     async getTopRatedTvShow() {
         tvShowsHead.textContent = 'Топ сериалов';
@@ -56,6 +58,10 @@ class DBService {
     async getTvShow(tvId) {
         return await this.getData(`${this.SERVER}/tv/${tvId}?api_key=${this.API_KEY}&language=ru_RU`)
     } 
+    async getNextPage(page) {
+        tvShowsHead.textContent = 'Результат поиска';
+        return await this.getData(`${this.temp}&page=${page}`);
+    }
     // testing
     async getTestData() {
         return await this.getData('./data/test.json');
@@ -66,8 +72,9 @@ class DBService {
 }
 
 // Insert TV show card data to HTML block
-const renderTvShowCard = response => {
+const renderTvShowCards = response => {
     tvShowsList.textContent = '';
+
     if (response.results.length === 0) {
         tvShowsHead.textContent = 'По запросу ничего не найдено...';
         tvShowsHead.style.cssText = 'color: red; border: 3px red';
@@ -103,6 +110,13 @@ const renderTvShowCard = response => {
         tvShowsList.append(card);
     });
 
+    pagination.textContent = '';
+    if (response.total_pages > 1) {
+        pagination.style.display = 'flex';
+        for (let i = 1; i <= 20; i++) {
+            pagination.innerHTML += `<li><a href="#" class="pages">${i}</a></li>`;
+        }
+    }
 };
 
 // search tv shows
@@ -112,7 +126,7 @@ searchForm.addEventListener('submit', event => {
     if (value) {
         searchFormInput.value = '';
         tvShows.append(loading);
-        dbService.getSearchResult(value).then(renderTvShowCard);
+        dbService.getSearchResult(value).then(renderTvShowCards);
     }
 });
 
@@ -153,23 +167,28 @@ leftMenu.addEventListener('click', event => {
         const popular = document.getElementById('popular'),   
               topRated = document.getElementById('top-rated'),
               week = document.getElementById('week'),
-              today = document.getElementById('today');
+              today = document.getElementById('today'),
+              search = document.getElementById('search');
 
         topRated.onclick = () => {
             tvShows.append(loading);
-            new DBService().getTopRatedTvShow().then(renderTvShowCard);    
+            new DBService().getTopRatedTvShow().then(renderTvShowCards);    
         };
         popular.onclick = () => {
             tvShows.append(loading);
-            new DBService().getPopularTvShow().then(renderTvShowCard);    
+            new DBService().getPopularTvShow().then(renderTvShowCards);    
         };
         week.onclick = () => {
             tvShows.append(loading);
-            new DBService().getWeekTvShow().then(renderTvShowCard);    
+            new DBService().getWeekTvShow().then(renderTvShowCards);    
         };
         today.onclick = () => {
             tvShows.append(loading);
-            new DBService().getTodayTvShow().then(renderTvShowCard);    
+            new DBService().getTodayTvShow().then(renderTvShowCards);    
+        };
+        search.onclick = () => {
+            tvShows.remove(loading);
+            tvShowsList.style.display = 'none';
         };
     }    
 });
@@ -185,6 +204,15 @@ const toggleImg = event => {
 
 tvShowsList.addEventListener('mouseover', toggleImg);
 tvShowsList.addEventListener('mouseout', toggleImg);
+
+pagination.addEventListener('click', event => {
+    event.preventDefault();
+    const target = event.target;
+    if (target.classList.contains('pages')) {
+        tvShows.append(loading);
+        dbService.getNextPage(target.textContent).then(renderTvShowCards);
+    }
+});
 
 // modal open
 tvShowsList.addEventListener('click', event => {
@@ -232,7 +260,7 @@ modal.addEventListener('click', event => {
 const init = () => {
     dbService = new DBService();
     loader.style.display = 'block';
-    dbService.getTopRatedTvShow().then(renderTvShowCard); 
+    dbService.getTopRatedTvShow().then(renderTvShowCards); 
     loader.style.display = '';
 }
 

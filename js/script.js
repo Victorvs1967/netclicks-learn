@@ -210,7 +210,7 @@ tvShowsList.addEventListener('click', event => {
             document.body.style.overflow = 'hidden';
             modal.classList.remove('hide');    
         })
-        .then(() => {
+        .finally(() => {
             preloader.style.display = '';
         });
     }

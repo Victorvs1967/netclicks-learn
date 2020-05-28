@@ -36,6 +36,18 @@ class DBService {
     async getTvShow(tvId) {
         return await this.getData(`${this.SERVER}/tv/${tvId}?api_key=${this.API_KEY}&language=ru_RU`)
     } 
+    async getTopRatedTvShow() {
+        return await this.getData(`${this.SERVER}/tv/top_rated?api_key=${this.API_KEY}&language=ru_RU`)
+    } 
+    async getPopularTvShow() {
+        return await this.getData(`${this.SERVER}/tv/popular?api_key=${this.API_KEY}&language=ru_RU`)
+    } 
+    async getWeekTvShow() {
+        return await this.getData(`${this.SERVER}/tv/on_the_air?api_key=${this.API_KEY}&language=ru_RU`)
+    } 
+    async getTodayTvShow() {
+        return await this.getData(`${this.SERVER}/tv/airing_today?api_key=${this.API_KEY}&language=ru_RU`)
+    } 
     // testing
     async getTestData() {
         return await this.getData('./data/test.json');
@@ -79,16 +91,14 @@ const renderTvShowCard = response => {
     });
 };
 
-{
-    tvShows.append(loading);
-    new DBService().getTestData().then(renderTvShowCard);
-}
-
 searchForm.addEventListener('submit', event => {
     event.preventDefault();
-    const value = searchFormInput.value;
-    new DBService().getSearchResult(value).then(renderTvShowCard);
-    searchFormInput.value = '';
+    const value = searchFormInput.value.trim();
+    if (value) {
+        searchFormInput.value = '';
+        tvShows.append(loading);
+        new DBService().getSearchResult(value).then(renderTvShowCard);
+    }
 });
 
 // open/close menu
@@ -111,7 +121,29 @@ leftMenu.addEventListener('click', event => {
         dropdown.classList.toggle('active');
         leftMenu.classList.add('openMenu');
         humburger.classList.add('open');
+        const popular = document.getElementById('popular'),   
+            topRated = document.getElementById('top-rated'),
+            week = document.getElementById('week'),
+            today = document.getElementById('today');
+
+        topRated.addEventListener('click', () => {
+            tvShows.append(loading);
+            new DBService().getTopRatedTvShow().then(renderTvShowCard);    
+        });
+        popular.addEventListener('click', () => {
+            tvShows.append(loading);
+            new DBService().getPopularTvShow().then(renderTvShowCard);    
+        });
+        week.addEventListener('click', () => {
+            tvShows.append(loading);
+            new DBService().getWeekTvShow().then(renderTvShowCard);    
+        });
+        today.addEventListener('click', () => {
+            tvShows.append(loading);
+            new DBService().getTodayTvShow().then(renderTvShowCard);    
+        });
     }
+    
 });
 
 // Toggel poster images at TV show card under mouse pointer
@@ -161,3 +193,10 @@ modal.addEventListener('click', event => {
         modal.classList.add('hide');
     }
 });
+
+const init = () => {
+    tvShows.append(loading);
+    new DBService().getTopRatedTvShow().then(renderTvShowCard);    
+}
+
+init();

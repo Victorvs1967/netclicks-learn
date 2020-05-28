@@ -33,23 +33,23 @@ class DBService {
         return response.json();
     }
     async getSearchResult(query) {
-        tvShowsHead.textContent = 'Результат поиска'
+        tvShowsHead.textContent = 'Результат поиска';
         return await this.getData(`${this.SERVER}/search/tv?api_key=${this.API_KEY}&query=${query}&language=ru_RU`);
     }
     async getTopRatedTvShow() {
-        tvShowsHead.textContent = 'Топ сериалов'
+        tvShowsHead.textContent = 'Топ сериалов';
         return await this.getData(`${this.SERVER}/tv/top_rated?api_key=${this.API_KEY}&language=ru_RU`)
     } 
     async getPopularTvShow() {
-        tvShowsHead.textContent = 'Популярные сериалы'
+        tvShowsHead.textContent = 'Популярные сериалы';
         return await this.getData(`${this.SERVER}/tv/popular?api_key=${this.API_KEY}&language=ru_RU`)
     } 
     async getWeekTvShow() {
-        tvShowsHead.textContent = 'Эпизоды на этой неделе'
+        tvShowsHead.textContent = 'Эпизоды на этой неделе';
         return await this.getData(`${this.SERVER}/tv/on_the_air?api_key=${this.API_KEY}&language=ru_RU`)
     } 
     async getTodayTvShow() {
-        tvShowsHead.textContent = 'Эпизоды сегодня'
+        tvShowsHead.textContent = 'Эпизоды сегодня';
         return await this.getData(`${this.SERVER}/tv/airing_today?api_key=${this.API_KEY}&language=ru_RU`)
     } 
     async getTvShow(tvId) {
@@ -68,36 +68,41 @@ class DBService {
 // Insert TV show card data to HTML block
 const renderTvShowCard = response => {
     tvShowsList.textContent = '';
-
-    response.results.forEach(item => {
-        const { id,
-                original_name: title,
-                vote_average: vote,
-                poster_path: poster,
-                backdrop_path: backdrop
-                } = item;
-
-        const backdropImg = backdrop ? BASE_URL + backdrop : './img/no-poster.jpg';
-        const posterImg = poster ? BASE_URL + poster : './img/no-poster.jpg';
-        const span = vote ? `<span class="tv-card__vote">${vote}</span>` : '';
-
-        const card = document.createElement('li');
-        card.className = 'tv-shows__item'
-        card.innerHTML = `
-                <a href="#" class="tv-card" data-id="${id}">
-                    ${span}
-                    <img class="tv-card__img"
-                        src="${posterImg}"
-                        data-backdrop="${backdropImg}"
-                        alt="${title}">
-                    <h4 class="tv-card__head">${title}</h4>
-                </a>
-        `;
+    if (response.results.length === 0) {
+        tvShowsHead.textContent = 'По запросу ничего не найдено';
         loading.remove();
-        tvShowsList.append(card);
-    });
+    } else {
+        response.results.forEach(item => {
+            const { id,
+                    original_name: title,
+                    vote_average: vote,
+                    poster_path: poster,
+                    backdrop_path: backdrop
+                    } = item;
+
+            const backdropImg = backdrop ? BASE_URL + backdrop : './img/no-poster.jpg';
+            const posterImg = poster ? BASE_URL + poster : './img/no-poster.jpg';
+            const span = vote ? `<span class="tv-card__vote">${vote}</span>` : '';
+
+            const card = document.createElement('li');
+            card.className = 'tv-shows__item'
+            card.innerHTML = `
+                    <a href="#" class="tv-card" data-id="${id}">
+                        ${span}
+                        <img class="tv-card__img"
+                            src="${posterImg}"
+                            data-backdrop="${backdropImg}"
+                            alt="${title}">
+                        <h4 class="tv-card__head">${title}</h4>
+                    </a>
+            `;
+            loading.remove();
+            tvShowsList.append(card);
+        });
+    }
 };
 
+// search tv shows
 searchForm.addEventListener('submit', event => {
     event.preventDefault();
     const value = searchFormInput.value.trim();
@@ -124,14 +129,16 @@ document.body.addEventListener('click', event => {
 leftMenu.addEventListener('click', event => {
     const target = event.target;
     const dropdown = target.closest('.dropdown');
+
     if (dropdown) {
         dropdown.classList.toggle('active');
         leftMenu.classList.add('openMenu');
         humburger.classList.add('open');
+
         const popular = document.getElementById('popular'),   
-            topRated = document.getElementById('top-rated'),
-            week = document.getElementById('week'),
-            today = document.getElementById('today');
+              topRated = document.getElementById('top-rated'),
+              week = document.getElementById('week'),
+              today = document.getElementById('today');
 
         topRated.addEventListener('click', () => {
             tvShows.append(loading);

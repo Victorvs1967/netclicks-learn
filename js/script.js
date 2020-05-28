@@ -14,7 +14,7 @@ const leftMenu = document.querySelector('.left-menu'),
     searchForm = document.querySelector('.search__form'),
     searchFormInput = document.querySelector('.search__form-input'),
     tvShowsHead = document.querySelector('.tv-shows__head'),
-    preloader = document.querySelector('.preloader'),
+    loader = document.querySelector('.loader'),
     dropdown = document.querySelectorAll('.dropdown');
 
 const loading = document.createElement('div');
@@ -63,7 +63,6 @@ class DBService {
     async getTestCard() {
         return await this.getData('./data/card.json');
     }
-
 }
 
 // Insert TV show card data to HTML block
@@ -113,7 +112,7 @@ searchForm.addEventListener('submit', event => {
     if (value) {
         searchFormInput.value = '';
         tvShows.append(loading);
-        new DBService().getSearchResult(value).then(renderTvShowCard);
+        dbService.getSearchResult(value).then(renderTvShowCard);
     }
 });
 
@@ -147,6 +146,10 @@ leftMenu.addEventListener('click', event => {
         leftMenu.classList.add('openMenu');
         humburger.classList.add('open');
 
+        if (target.closest('#popular')) {
+            console.log('popular');
+        }
+
         const popular = document.getElementById('popular'),   
               topRated = document.getElementById('top-rated'),
               week = document.getElementById('week'),
@@ -168,6 +171,7 @@ leftMenu.addEventListener('click', event => {
             tvShows.append(loading);
             new DBService().getTodayTvShow().then(renderTvShowCard);    
         });
+
     }
     
 });
@@ -191,8 +195,8 @@ tvShowsList.addEventListener('click', event => {
     const card = target.closest('.tv-card');
 
     if (card) {
-        preloader.style.display = 'block';
-        new DBService().getTvShow(card.dataset.id)
+        loader.style.display = 'block';
+        dbService.getTvShow(card.dataset.id)
         .then(data => {
             tvCardImg.src = data.poster_path ? BASE_URL + data.poster_path : './img/no-poster.jpg';
             modalTitle.textContent = data.name;
@@ -211,7 +215,7 @@ tvShowsList.addEventListener('click', event => {
             modal.classList.remove('hide');    
         })
         .finally(() => {
-            preloader.style.display = '';
+            loader.style.display = '';
         });
     }
 });
@@ -227,9 +231,10 @@ modal.addEventListener('click', event => {
 });
 
 const init = () => {
-    preloader.style.display = 'block';
-    new DBService().getTopRatedTvShow().then(renderTvShowCard); 
-    preloader.style.display = '';
+    dbService = new DBService();
+    loader.style.display = 'block';
+    dbService.getTopRatedTvShow().then(renderTvShowCard); 
+    loader.style.display = '';
 }
 
 init();

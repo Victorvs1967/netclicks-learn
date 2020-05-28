@@ -13,7 +13,8 @@ const leftMenu = document.querySelector('.left-menu'),
     modalLink = document.querySelector('.modal__link'),
     searchForm = document.querySelector('.search__form'),
     searchFormInput = document.querySelector('.search__form-input'),
-    tvShowsHead = document.querySelector('.tv-shows__head');
+    tvShowsHead = document.querySelector('.tv-shows__head'),
+    preloader = document.querySelector('.preloader');
 
 const loading = document.createElement('div');
 loading.className = 'loading';
@@ -164,12 +165,14 @@ const toggleImg = event => {
 tvShowsList.addEventListener('mouseover', toggleImg);
 tvShowsList.addEventListener('mouseout', toggleImg);
 
+// modal open
 tvShowsList.addEventListener('click', event => {
     event.preventDefault();
     const target = event.target;
     const card = target.closest('.tv-card');
 
     if (card) {
+        preloader.style.display = 'block';
         new DBService().getTvShow(card.dataset.id)
         .then(data => {
             tvCardImg.src = data.poster_path ? BASE_URL + data.poster_path : './img/no-poster.jpg';
@@ -185,12 +188,14 @@ tvShowsList.addEventListener('click', event => {
             }
         })
         .then(() => {
+            preloader.style.display = 'none';
             document.body.style.overflow = 'hidden';
             modal.classList.remove('hide');    
         });
     }
 });
 
+// modal close
 modal.addEventListener('click', event => {
     const target = event.target;
 
@@ -201,8 +206,10 @@ modal.addEventListener('click', event => {
 });
 
 const init = () => {
-    tvShows.append(loading);
-    new DBService().getTopRatedTvShow().then(renderTvShowCard);    
+    preloader.style.display = 'block';
+    new DBService().getTopRatedTvShow().then(renderTvShowCard); 
+    preloader.style.display = '';
+   
 }
 
 init();

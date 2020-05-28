@@ -155,25 +155,23 @@ leftMenu.addEventListener('click', event => {
               week = document.getElementById('week'),
               today = document.getElementById('today');
 
-        topRated.addEventListener('click', () => {
+        topRated.onclick = () => {
             tvShows.append(loading);
             new DBService().getTopRatedTvShow().then(renderTvShowCard);    
-        });
-        popular.addEventListener('click', () => {
+        };
+        popular.onclick = () => {
             tvShows.append(loading);
             new DBService().getPopularTvShow().then(renderTvShowCard);    
-        });
-        week.addEventListener('click', () => {
+        };
+        week.onclick = () => {
             tvShows.append(loading);
             new DBService().getWeekTvShow().then(renderTvShowCard);    
-        });
-        today.addEventListener('click', () => {
+        };
+        today.onclick = () => {
             tvShows.append(loading);
             new DBService().getTodayTvShow().then(renderTvShowCard);    
-        });
-
-    }
-    
+        };
+    }    
 });
 
 // Toggel poster images at TV show card under mouse pointer
@@ -195,6 +193,7 @@ tvShowsList.addEventListener('click', event => {
     const card = target.closest('.tv-card');
 
     if (card) {
+
         loader.style.display = 'block';
         dbService.getTvShow(card.dataset.id)
         .then(data => {

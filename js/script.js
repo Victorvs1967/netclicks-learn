@@ -14,7 +14,8 @@ const leftMenu = document.querySelector('.left-menu'),
     searchForm = document.querySelector('.search__form'),
     searchFormInput = document.querySelector('.search__form-input'),
     tvShowsHead = document.querySelector('.tv-shows__head'),
-    preloader = document.querySelector('.preloader');
+    preloader = document.querySelector('.preloader'),
+    dropdown = document.querySelectorAll('.dropdown');
 
 const loading = document.createElement('div');
 loading.className = 'loading';
@@ -69,37 +70,40 @@ class DBService {
 const renderTvShowCard = response => {
     tvShowsList.textContent = '';
     if (response.results.length === 0) {
-        tvShowsHead.textContent = 'По запросу ничего не найдено';
+        tvShowsHead.textContent = 'По запросу ничего не найдено...';
+        tvShowsHead.style.cssText = 'color: red; border: 3px red';
         loading.remove();
-    } else {
-        response.results.forEach(item => {
-            const { id,
-                    original_name: title,
-                    vote_average: vote,
-                    poster_path: poster,
-                    backdrop_path: backdrop
-                    } = item;
-
-            const backdropImg = backdrop ? BASE_URL + backdrop : './img/no-poster.jpg';
-            const posterImg = poster ? BASE_URL + poster : './img/no-poster.jpg';
-            const span = vote ? `<span class="tv-card__vote">${vote}</span>` : '';
-
-            const card = document.createElement('li');
-            card.className = 'tv-shows__item'
-            card.innerHTML = `
-                    <a href="#" class="tv-card" data-id="${id}">
-                        ${span}
-                        <img class="tv-card__img"
-                            src="${posterImg}"
-                            data-backdrop="${backdropImg}"
-                            alt="${title}">
-                        <h4 class="tv-card__head">${title}</h4>
-                    </a>
-            `;
-            loading.remove();
-            tvShowsList.append(card);
-        });
+        return;
     }
+    tvShowsHead.style.cssText = '';
+    response.results.forEach(item => {
+        const { id,
+                original_name: title,
+                vote_average: vote,
+                poster_path: poster,
+                backdrop_path: backdrop
+                } = item;
+
+        const backdropImg = backdrop ? BASE_URL + backdrop : './img/no-poster.jpg';
+        const posterImg = poster ? BASE_URL + poster : './img/no-poster.jpg';
+        const span = vote ? `<span class="tv-card__vote">${vote}</span>` : '';
+
+        const card = document.createElement('li');
+        card.className = 'tv-shows__item'
+        card.innerHTML = `
+                <a href="#" class="tv-card" data-id="${id}">
+                    ${span}
+                    <img class="tv-card__img"
+                        src="${posterImg}"
+                        data-backdrop="${backdropImg}"
+                        alt="${title}">
+                    <h4 class="tv-card__head">${title}</h4>
+                </a>
+        `;
+        loading.remove();
+        tvShowsList.append(card);
+    });
+
 };
 
 // search tv shows
@@ -114,16 +118,24 @@ searchForm.addEventListener('submit', event => {
 });
 
 // open/close menu
+const closeDropdown = () => {
+    dropdown.forEach(item => {
+        item.classList.remove('active');
+    });
+};
+
 humburger.addEventListener('click', () => {
     leftMenu.classList.toggle('openMenu');
     humburger.classList.toggle('open');
+    closeDropdown();
 });
 
 document.body.addEventListener('click', event => {
     if (!event.target.closest('.left-menu')) {
         leftMenu.classList.remove('openMenu');
         humburger.classList.remove('open');
-        }
+        closeDropdown();
+    }
 });
 
 leftMenu.addEventListener('click', event => {
@@ -195,9 +207,11 @@ tvShowsList.addEventListener('click', event => {
             }
         })
         .then(() => {
-            preloader.style.display = 'none';
             document.body.style.overflow = 'hidden';
             modal.classList.remove('hide');    
+        })
+        .then(() => {
+            preloader.style.display = '';
         });
     }
 });
@@ -216,7 +230,6 @@ const init = () => {
     preloader.style.display = 'block';
     new DBService().getTopRatedTvShow().then(renderTvShowCard); 
     preloader.style.display = '';
-   
 }
 
 init();

@@ -21,6 +21,7 @@ const leftMenu = document.querySelector('.left-menu'),
 const loading = document.createElement('div');
 loading.className = 'loading';
 
+let currentPage;
 let firstPage;
 let lastPage;
 let pages;
@@ -39,32 +40,37 @@ class DBService {
         return response.json();
     }
     async getSearchResult(query) {
-        tvShowsHead.textContent = 'Результат поиска';
+        this.title = 'Результат поиска';
+        tvShowsHead.textContent = this.title;
         this.temp = `${this.SERVER}/search/tv?api_key=${this.API_KEY}&query=${query}&language=ru_RU`;
         return await this.getData(this.temp);
     }
     async getTopRatedTvShow() {
-        tvShowsHead.textContent = 'Топ сериалов';
+        this.title = 'Топ сериалов';
+        tvShowsHead.textContent = this.title;
         this.temp = `${this.SERVER}/tv/top_rated?api_key=${this.API_KEY}&language=ru_RU`;
         return await this.getData(this.temp);
     } 
     async getPopularTvShow() {
-        tvShowsHead.textContent = 'Популярные сериалы';
+        this.title = 'Популярные сериалы';
+        tvShowsHead.textContent = this.title;
         this.temp = `${this.SERVER}/tv/popular?api_key=${this.API_KEY}&language=ru_RU`;
         return await this.getData(this.temp);
     } 
     async getWeekTvShow() {
-        tvShowsHead.textContent = 'Эпизоды на этой неделе';
+        this.title = 'Эпизоды на этой неделе';
+        tvShowsHead.textContent = this.title;
         this.temp = `${this.SERVER}/tv/on_the_air?api_key=${this.API_KEY}&language=ru_RU`;
         return await this.getData(this.temp);
     } 
     async getTodayTvShow() {
-        tvShowsHead.textContent = 'Эпизоды сегодня';
+        this.title = 'Эпизоды сегодня';
+        tvShowsHead.textContent = this.title;
         this.temp = `${this.SERVER}/tv/airing_today?api_key=${this.API_KEY}&language=ru_RU`;
         return await this.getData(this.temp);
     } 
     async getNextPage(page) {
-        tvShowsHead.textContent = 'Результат поиска';
+        tvShowsHead.textContent = this.title;
         return await this.getData(`${this.temp}&page=${page}`);
     }
     async getTvShow(tvId) {
@@ -80,20 +86,21 @@ class DBService {
 }
 
 // Insert TV show card data to HTML block
-const renderPagination = (start, end) => {
+const renderPagination = () => {
     pagination.textContent = '';
-    if (end > 1) {
-        if (start >= 1) {
+    if (firstPage < 1) { firstPage = 1 };
+    if (lastPage > 1) {
+        if (firstPage > 1) {
             pagination.innerHTML += `<li><a href="#" class="pages"><</a></li>`;
             pagination.innerHTML += `<li><a href="#" class="pages">1</a></li>`;
             pagination.innerHTML += `<li><a href="#" class="pages">..</a></li>`;
         }
         pagination.style.display = 'flex';
-        let pagesRange = ((start + 9) <= end) ? start + 9 : end;
-        for (let i = start; i <= pagesRange; i++) {
+        let pagesRange = ((firstPage + 9) <= lastPage) ? firstPage + 9 : lastPage;
+        for (let i = firstPage; i <= pagesRange; i++) {
             pagination.innerHTML += `<li><a href="#" class="pages">${i}</a></li>`;    
         }
-        if ((end - start) >= 10) {
+        if ((lastPage - firstPage) >= 10) {
             pagination.innerHTML += `<li><a href="#" class="pages">..</a></li>`;
             pagination.innerHTML += `<li><a href="#" class="pages">${pages}</a></li>`;
             pagination.innerHTML += `<li><a href="#" class="pages">></a></li>`;
@@ -140,7 +147,7 @@ const renderTvShowCards = response => {
         loading.remove();
         tvShowsList.append(card);
     });
-    renderPagination(firstPage, lastPage);
+    renderPagination();
 };
 
 pagination.onclick = event => {
@@ -163,8 +170,18 @@ pagination.onclick = event => {
             case '..': break;
             default:
                 tvShows.append(loading);
-                dbService.getNextPage(target.textContent).then(renderTvShowCards);        
-        }
+                dbService.getNextPage(target.textContent).then(renderTvShowCards);   
+                if (target.textContent === `${pages}`) {
+                    firstPage = (firstPage < 1) ? 1 : pages - 9;
+                    lastPage = pages;
+                    renderPagination();
+                } 
+                if (target.textContent === `1`) {
+                    firstPage = 1;
+                    lastPage = pages;
+                    renderPagination();
+                }
+            }
    }
 };
 

@@ -33,55 +33,55 @@ class DBService {
     }
     
     async getData(url) {
-        const response =  await fetch(url);
+        const response = await fetch(url);
         if (!response.ok) {
             throw new Error(`Error response at ${url}, status: ${response.status}`);
         }
         return response.json();
     }
-    async getSearchResult(query) {
+    getSearchResult(query) {
         this.title = 'Результат поиска';
         tvShowsHead.textContent = this.title;
         this.temp = `${this.SERVER}/search/tv?api_key=${this.API_KEY}&query=${query}&language=ru_RU`;
-        return await this.getData(this.temp);
+        return this.getData(this.temp);
     }
-    async getTopRatedTvShow() {
+    getTopRatedTvShow() {
         this.title = 'Топ сериалов';
         tvShowsHead.textContent = this.title;
         this.temp = `${this.SERVER}/tv/top_rated?api_key=${this.API_KEY}&language=ru_RU`;
-        return await this.getData(this.temp);
+        return this.getData(this.temp);
     } 
-    async getPopularTvShow() {
+    getPopularTvShow() {
         this.title = 'Популярные сериалы';
         tvShowsHead.textContent = this.title;
         this.temp = `${this.SERVER}/tv/popular?api_key=${this.API_KEY}&language=ru_RU`;
-        return await this.getData(this.temp);
+        return this.getData(this.temp);
     } 
-    async getWeekTvShow() {
+    getWeekTvShow() {
         this.title = 'Эпизоды на этой неделе';
         tvShowsHead.textContent = this.title;
         this.temp = `${this.SERVER}/tv/on_the_air?api_key=${this.API_KEY}&language=ru_RU`;
-        return await this.getData(this.temp);
+        return this.getData(this.temp);
     } 
-    async getTodayTvShow() {
+    getTodayTvShow() {
         this.title = 'Эпизоды сегодня';
         tvShowsHead.textContent = this.title;
         this.temp = `${this.SERVER}/tv/airing_today?api_key=${this.API_KEY}&language=ru_RU`;
-        return await this.getData(this.temp);
+        return this.getData(this.temp);
     } 
-    async getNextPage(page) {
+    getNextPage(page) {
         tvShowsHead.textContent = this.title;
-        return await this.getData(`${this.temp}&page=${page}`);
+        return this.getData(`${this.temp}&page=${page}`);
     }
-    async getTvShow(tvId) {
-        return await this.getData(`${this.SERVER}/tv/${tvId}?api_key=${this.API_KEY}&language=ru_RU`)
+    getTvShow(tvId) {
+        return this.getData(`${this.SERVER}/tv/${tvId}?api_key=${this.API_KEY}&language=ru_RU`)
     } 
     // testing
-    async getTestData() {
-        return await this.getData('./data/test.json');
+    getTestData() {
+        return this.getData('./data/test.json');
     } 
-    async getTestCard() {
-        return await this.getData('./data/card.json');
+    getTestCard() {
+        return this.getData('./data/card.json');
     }
 }
 
@@ -168,7 +168,7 @@ pagination.onclick = event => {
                 break;                  
             }
             case '..': break;
-            default:
+            default: {
                 tvShows.append(loading);
                 dbService.getNextPage(target.textContent).then(renderTvShowCards);   
                 if (target.textContent === `${pages}`) {
@@ -182,6 +182,7 @@ pagination.onclick = event => {
                     renderPagination();
                 }
             }
+        }
    }
 };
 
@@ -246,19 +247,21 @@ leftMenu.addEventListener('click', event => {
 
         topRated.onclick = () => {
             tvShows.append(loading);
-            new DBService().getTopRatedTvShow().then(renderTvShowCards);    
+            dbService.getTopRatedTvShow().then(renderTvShowCards);    
+            renderPagination();
         };
         popular.onclick = () => {
             tvShows.append(loading);
-            new DBService().getPopularTvShow().then(renderTvShowCards);    
+            dbService.getPopularTvShow().then(renderTvShowCards);    
+            renderPagination();
         };
         week.onclick = () => {
             tvShows.append(loading);
-            new DBService().getWeekTvShow().then(renderTvShowCards);    
+            dbService.getWeekTvShow().then(renderTvShowCards);    
         };
         today.onclick = () => {
             tvShows.append(loading);
-            new DBService().getTodayTvShow().then(renderTvShowCards);    
+            dbService.getTodayTvShow().then(renderTvShowCards);    
         };
     }    
 });
@@ -324,6 +327,7 @@ modal.addEventListener('click', event => {
     }
 });
 
+// init application
 const init = () => {
     firstPage = 1;
     dbService = new DBService();

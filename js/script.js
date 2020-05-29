@@ -109,13 +109,17 @@ const renderTvShowCards = response => {
         loading.remove();
         tvShowsList.append(card);
     });
-
     pagination.textContent = '';
     if (response.total_pages > 1) {
+        pagination.innerHTML += `<li><a href="#" class="pages"><</a></li>`;
         pagination.style.display = 'flex';
-        for (let i = 1; i <= 20; i++) {
-            pagination.innerHTML += `<li><a href="#" class="pages">${i}</a></li>`;
+        let page = 1;
+        for (let i = page; i < page + 20; i++) {
+            if (page <= response.total_pages) {
+                pagination.innerHTML += `<li><a href="#" class="pages">${i}</a></li>`;    
+            }    
         }
+        pagination.innerHTML += `<li><a href="#" class="pages">></a></li>`;
     }
 };
 
@@ -155,20 +159,29 @@ leftMenu.addEventListener('click', event => {
     const target = event.target;
     const dropdown = target.closest('.dropdown');
 
+    search = document.getElementById('search');
+
+    if (search) {
+        search.classList.toggle('active');
+        leftMenu.classList.add('openMenu');
+        humburger.classList.add('open');
+
+        search.onclick = () => {
+            tvShowsHead.textContent = '';
+            tvShowsList.textContent = '';
+            pagination.textContent = '';
+        };    
+    }
+
     if (dropdown) {
         dropdown.classList.toggle('active');
         leftMenu.classList.add('openMenu');
         humburger.classList.add('open');
 
-        if (target.closest('#popular')) {
-            console.log('popular');
-        }
-
         const popular = document.getElementById('popular'),   
               topRated = document.getElementById('top-rated'),
               week = document.getElementById('week'),
-              today = document.getElementById('today'),
-              search = document.getElementById('search');
+              today = document.getElementById('today');
 
         topRated.onclick = () => {
             tvShows.append(loading);
@@ -186,10 +199,6 @@ leftMenu.addEventListener('click', event => {
             tvShows.append(loading);
             new DBService().getTodayTvShow().then(renderTvShowCards);    
         };
-        search.onclick = () => {
-            tvShows.remove(loading);
-            tvShowsList.style.display = 'none';
-        };
     }    
 });
 
@@ -205,14 +214,20 @@ const toggleImg = event => {
 tvShowsList.addEventListener('mouseover', toggleImg);
 tvShowsList.addEventListener('mouseout', toggleImg);
 
-pagination.addEventListener('click', event => {
+searchForm.onclick = () => {
+    tvShowsHead.textContent = '';
+    tvShowsList.textContent = '';
+    pagination.textContent = '';
+}
+
+pagination.onclick = event => {
     event.preventDefault();
     const target = event.target;
     if (target.classList.contains('pages')) {
         tvShows.append(loading);
         dbService.getNextPage(target.textContent).then(renderTvShowCards);
     }
-});
+};
 
 // modal open
 tvShowsList.addEventListener('click', event => {

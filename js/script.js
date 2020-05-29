@@ -186,9 +186,10 @@ const closeDropdown = () => {
     });
 };
 
-humburger.addEventListener('click', () => {
+humburger.addEventListener('click', event => {
     leftMenu.classList.toggle('openMenu');
     humburger.classList.toggle('open');
+    closeDropdown();
 });
 
 document.body.addEventListener('click', event => {
@@ -202,8 +203,7 @@ document.body.addEventListener('click', event => {
 leftMenu.addEventListener('click', event => {
     const target = event.target;
     const dropdown = target.closest('.dropdown');
-
-    search = document.getElementById('search');
+    const search = document.getElementById('search');
 
     if (search) {
         search.classList.toggle('active');

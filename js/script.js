@@ -20,6 +20,10 @@ const leftMenu = document.querySelector('.left-menu'),
 
 const loading = document.createElement('div');
 loading.className = 'loading';
+
+let firstPage;
+let lastPage;
+let pages;
 class DBService {
 
     constructor() {
@@ -36,32 +40,36 @@ class DBService {
     }
     async getSearchResult(query) {
         tvShowsHead.textContent = 'Результат поиска';
-        this.temp = `${this.SERVER}/search/tv?api_key=${this.API_KEY}&query=${query}&language=ru_RU`
+        this.temp = `${this.SERVER}/search/tv?api_key=${this.API_KEY}&query=${query}&language=ru_RU`;
         return await this.getData(this.temp);
     }
     async getTopRatedTvShow() {
         tvShowsHead.textContent = 'Топ сериалов';
-        return await this.getData(`${this.SERVER}/tv/top_rated?api_key=${this.API_KEY}&language=ru_RU`)
+        this.temp = `${this.SERVER}/tv/top_rated?api_key=${this.API_KEY}&language=ru_RU`;
+        return await this.getData(this.temp);
     } 
     async getPopularTvShow() {
         tvShowsHead.textContent = 'Популярные сериалы';
-        return await this.getData(`${this.SERVER}/tv/popular?api_key=${this.API_KEY}&language=ru_RU`)
+        this.temp = `${this.SERVER}/tv/popular?api_key=${this.API_KEY}&language=ru_RU`;
+        return await this.getData(this.temp);
     } 
     async getWeekTvShow() {
         tvShowsHead.textContent = 'Эпизоды на этой неделе';
-        return await this.getData(`${this.SERVER}/tv/on_the_air?api_key=${this.API_KEY}&language=ru_RU`)
+        this.temp = `${this.SERVER}/tv/on_the_air?api_key=${this.API_KEY}&language=ru_RU`;
+        return await this.getData(this.temp);
     } 
     async getTodayTvShow() {
         tvShowsHead.textContent = 'Эпизоды сегодня';
-        return await this.getData(`${this.SERVER}/tv/airing_today?api_key=${this.API_KEY}&language=ru_RU`)
-    } 
-    async getTvShow(tvId) {
-        return await this.getData(`${this.SERVER}/tv/${tvId}?api_key=${this.API_KEY}&language=ru_RU`)
+        this.temp = `${this.SERVER}/tv/airing_today?api_key=${this.API_KEY}&language=ru_RU`;
+        return await this.getData(this.temp);
     } 
     async getNextPage(page) {
         tvShowsHead.textContent = 'Результат поиска';
         return await this.getData(`${this.temp}&page=${page}`);
     }
+    async getTvShow(tvId) {
+        return await this.getData(`${this.SERVER}/tv/${tvId}?api_key=${this.API_KEY}&language=ru_RU`)
+    } 
     // testing
     async getTestData() {
         return await this.getData('./data/test.json');
@@ -72,9 +80,29 @@ class DBService {
 }
 
 // Insert TV show card data to HTML block
+const renderPagination = (start, end) => {
+    pagination.textContent = '';
+    if (end > 1) {
+        if (start >= 1) {
+            pagination.innerHTML += `<li><a href="#" class="pages"><</a></li>`;
+            pagination.innerHTML += `<li><a href="#" class="pages">1</a></li>`;
+            pagination.innerHTML += `<li><a href="#" class="pages">..</a></li>`;
+        }
+        pagination.style.display = 'flex';
+        let pagesRange = ((start + 9) <= end) ? start + 9 : end;
+        for (let i = start; i <= pagesRange; i++) {
+            pagination.innerHTML += `<li><a href="#" class="pages">${i}</a></li>`;    
+        }
+        if ((end - start) >= 10) {
+            pagination.innerHTML += `<li><a href="#" class="pages">..</a></li>`;
+            pagination.innerHTML += `<li><a href="#" class="pages">${pages}</a></li>`;
+            pagination.innerHTML += `<li><a href="#" class="pages">></a></li>`;
+        }
+    }
+};
+
 const renderTvShowCards = response => {
     tvShowsList.textContent = '';
-
     if (response.results.length === 0) {
         tvShowsHead.textContent = 'По запросу ничего не найдено...';
         tvShowsHead.style.cssText = 'color: red; border: 3px red';
@@ -82,6 +110,9 @@ const renderTvShowCards = response => {
         return;
     }
     tvShowsHead.style.cssText = '';
+
+    pages = response.total_pages;
+    lastPage = pages;
     response.results.forEach(item => {
         const { id,
                 original_name: title,
@@ -109,18 +140,32 @@ const renderTvShowCards = response => {
         loading.remove();
         tvShowsList.append(card);
     });
-    pagination.textContent = '';
-    if (response.total_pages > 1) {
-        pagination.innerHTML += `<li><a href="#" class="pages"><</a></li>`;
-        pagination.style.display = 'flex';
-        let page = 1;
-        for (let i = page; i < page + 20; i++) {
-            if (page <= response.total_pages) {
-                pagination.innerHTML += `<li><a href="#" class="pages">${i}</a></li>`;    
-            }    
+    renderPagination(firstPage, lastPage);
+};
+
+pagination.onclick = event => {
+    event.preventDefault();
+    const target = event.target;
+    if (target.classList.contains('pages')) {
+        switch (target.textContent) {
+            case '<': {
+                firstPage -= 9;
+                lastPage -= 9;
+                renderPagination(firstPage, lastPage);
+                break;
+            }
+            case '>': {
+                firstPage += 9;
+                lastPage += 9;
+                renderPagination(firstPage, lastPage);
+                break;                  
+            }
+            case '..': break;
+            default:
+                tvShows.append(loading);
+                dbService.getNextPage(target.textContent).then(renderTvShowCards);        
         }
-        pagination.innerHTML += `<li><a href="#" class="pages">></a></li>`;
-    }
+   }
 };
 
 // search tv shows
@@ -144,7 +189,6 @@ const closeDropdown = () => {
 humburger.addEventListener('click', () => {
     leftMenu.classList.toggle('openMenu');
     humburger.classList.toggle('open');
-    closeDropdown();
 });
 
 document.body.addEventListener('click', event => {
@@ -220,15 +264,6 @@ searchForm.onclick = () => {
     pagination.textContent = '';
 }
 
-pagination.onclick = event => {
-    event.preventDefault();
-    const target = event.target;
-    if (target.classList.contains('pages')) {
-        tvShows.append(loading);
-        dbService.getNextPage(target.textContent).then(renderTvShowCards);
-    }
-};
-
 // modal open
 tvShowsList.addEventListener('click', event => {
     event.preventDefault();
@@ -273,6 +308,7 @@ modal.addEventListener('click', event => {
 });
 
 const init = () => {
+    firstPage = 1;
     dbService = new DBService();
     loader.style.display = 'block';
     dbService.getTopRatedTvShow().then(renderTvShowCards); 

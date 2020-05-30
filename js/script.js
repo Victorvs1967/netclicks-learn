@@ -5,6 +5,8 @@ const leftMenu = document.querySelector('.left-menu'),
     tvShowsList = document.querySelector('.tv-shows__list'),
     modal = document.querySelector('.modal'),
     tvShows = document.querySelector('.tv-shows'),
+    firstAirDate = document.querySelector('.first-air-date'),
+    originCountryList = document.querySelector('.origin-country-list'),
     tvCardImg = document.querySelector('.tv-card__img'),
     modalTitle = document.querySelector('.modal__title'),
     genresList = document.querySelector('.genres-list'),
@@ -295,14 +297,20 @@ tvShowsList.addEventListener('click', event => {
         loader.style.display = 'block';
         dbService.getTvShow(card.dataset.id)
         .then(data => {
+            console.log('data: ', data);
+
+            firstAirDate.textContent = data.first_air_date.split(['-'])[0];
             tvCardImg.src = data.poster_path ? BASE_URL + data.poster_path : './img/no-poster.jpg';
             modalTitle.textContent = data.name;
             rating.textContent = data.vote_average;
             description.textContent = data.overview;
             modalLink.href = data.homepage;
 
+            originCountryList.textContent = '';
+            for (const item of data.origin_country) {
+                originCountryList.innerHTML += `<li>${item}</li>`;
+            }
             genresList.textContent = '';
-
             for (const item of data.genres) {
                 genresList.innerHTML += `<li>${item.name}</li>`;
             }

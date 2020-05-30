@@ -297,8 +297,7 @@ tvShowsList.addEventListener('click', event => {
         loader.style.display = 'block';
         dbService.getTvShow(card.dataset.id)
         .then(data => {
-            console.log('data: ', data);
-
+            
             firstAirDate.textContent = data.first_air_date.split(['-'])[0];
             tvCardImg.src = data.poster_path ? BASE_URL + data.poster_path : './img/no-poster.jpg';
             modalTitle.textContent = data.name;

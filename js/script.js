@@ -1,7 +1,7 @@
 const BASE_URL = 'https://image.tmdb.org/t/p/w185_and_h278_bestv2';
 
 const leftMenu = document.querySelector('.left-menu'),
-    humburger = document.querySelector('.humburger'),
+    hamburger = document.querySelector('.hamburger'),
     tvShowsList = document.querySelector('.tv-shows__list'),
     modal = document.querySelector('.modal'),
     tvShows = document.querySelector('.tv-shows'),
@@ -206,16 +206,16 @@ const closeDropdown = () => {
     });
 };
 
-humburger.addEventListener('click', event => {
+hamburger.addEventListener('click', () => {
     leftMenu.classList.toggle('openMenu');
-    humburger.classList.toggle('open');
+    hamburger.classList.toggle('open');
     closeDropdown();
 });
 
 document.body.addEventListener('click', event => {
     if (!event.target.closest('.left-menu')) {
         leftMenu.classList.remove('openMenu');
-        humburger.classList.remove('open');
+        hamburger.classList.remove('open');
         closeDropdown();
     }
 });
@@ -227,9 +227,7 @@ leftMenu.addEventListener('click', event => {
 
     if (search) {
         search.classList.toggle('active');
-        leftMenu.classList.add('openMenu');
-        humburger.classList.add('open');
-
+ 
         search.onclick = () => {
             tvShowsHead.textContent = '';
             tvShowsList.textContent = '';
@@ -239,8 +237,11 @@ leftMenu.addEventListener('click', event => {
 
     if (dropdown) {
         dropdown.classList.toggle('active');
-        leftMenu.classList.add('openMenu');
-        humburger.classList.add('open');
+
+        if (!leftMenu.classList.contains('.openMenu')) {
+            leftMenu.classList.add('openMenu');
+            hamburger.classList.add('open');    
+        }
 
         const popular = document.getElementById('popular'),   
               topRated = document.getElementById('top-rated'),
